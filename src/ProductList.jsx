@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ProductList.css';
 import CartItem from './CartItem';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'; // ✅ useSelector added
 import { addItem } from './CartSlice';
 
 function ProductList({ onHomeClick }) {
@@ -10,6 +10,10 @@ function ProductList({ onHomeClick }) {
     const [addedToCart, setAddedToCart] = useState({}); // ✅ Track added products
 
     const dispatch = useDispatch();
+    const cart = useSelector(state => state.cart.items); // ✅ Access cart state
+
+    // ✅ Calculate total number of items in cart
+    const totalCartItems = cart.reduce((total, item) => total + item.quantity, 0);
 
     const handleAddToCart = (plant) => {
         dispatch(addItem(plant));   // ✅ Add plant to Redux cart
@@ -102,7 +106,11 @@ function ProductList({ onHomeClick }) {
                 </div>
                 <div style={styleObjUl}>
                     <div><a href="#" onClick={(e) => handlePlantsClick(e)} style={styleA}>Plants</a></div>
-                    <div><a href="#" onClick={(e) => handleCartClick(e)} style={styleA}><h1 className='cart'>🛒</h1></a></div>
+                    <div>
+                        <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
+                            <h1 className='cart'>🛒 {totalCartItems > 0 && <span>({totalCartItems})</span>}</h1>
+                        </a>
+                    </div>
                 </div>
             </div>
 
