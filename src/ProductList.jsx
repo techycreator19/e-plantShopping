@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import './ProductList.css';
 import CartItem from './CartItem';
+import { useDispatch } from 'react-redux';
+import { addItem } from './CartSlice';
 
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false);
+    const [addedToCart, setAddedToCart] = useState({}); // ✅ Track added products
 
-    // ✅ Step 1: Track which plants are added to cart
-    const [addedToCart, setAddedToCart] = useState({});
+    const dispatch = useDispatch();
+
+    const handleAddToCart = (plant) => {
+        dispatch(addItem(plant));   // ✅ Add plant to Redux cart
+        setAddedToCart((prev) => ({
+            ...prev,
+            [plant.name]: true
+        }));
+    };
 
     const plantsArray = [
         {
@@ -25,10 +35,10 @@ function ProductList({ onHomeClick }) {
                     description: "Filters formaldehyde and xylene from the air.",
                     cost: "$12"
                 }
-                // ... rest of your plants
+                // ✅ Add more plants here
             ]
         },
-        // ... rest of categories
+        // ✅ Add more categories here
     ];
 
     const styleObj = {
@@ -37,7 +47,7 @@ function ProductList({ onHomeClick }) {
         padding: '15px',
         display: 'flex',
         justifyContent: 'space-between',
-        alignIems: 'center',
+        alignItems: 'center',
         fontSize: '20px',
     };
 
@@ -109,8 +119,11 @@ function ProductList({ onHomeClick }) {
                                         <h3>{plant.name}</h3>
                                         <p>{plant.description}</p>
                                         <p><strong>{plant.cost}</strong></p>
-                                        <button>
-                                            Add to Cart
+                                        <button 
+                                            onClick={() => handleAddToCart(plant)}
+                                            disabled={addedToCart[plant.name]}
+                                        >
+                                            {addedToCart[plant.name] ? "✅ Added" : "Add to Cart"}
                                         </button>
                                     </div>
                                 ))}
