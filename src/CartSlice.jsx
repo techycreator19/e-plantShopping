@@ -1,23 +1,22 @@
+// CartSlice.jsx
 import { createSlice } from '@reduxjs/toolkit';
 
 export const CartSlice = createSlice({
   name: 'cart',
   initialState: {
-    items: [], // ✅ Start with empty cart
+    items: [], // ✅ Cart starts empty
   },
   reducers: {
     addItem: (state, action) => {
       const item = action.payload;
 
-      // ✅ Check if plant already exists in cart
+      // Check if the plant already exists
       const existingItem = state.items.find((i) => i.name === item.name);
 
       if (existingItem) {
-        // If exists, increment quantity
-        existingItem.quantity += 1;
+        existingItem.quantity += 1; // increment if already in cart
       } else {
-        // If new, add with quantity 1
-        state.items.push({ ...item, quantity: 1 });
+        state.items.push({ ...item, quantity: 1 }); // add new plant with quantity 1
       }
     },
 
